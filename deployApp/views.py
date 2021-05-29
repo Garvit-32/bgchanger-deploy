@@ -37,15 +37,9 @@ def predictImage(request):
         return render(request, 'deployApp/index.html', context)
 
     fs = FileSystemStorage()
-    filePathName = fs.save('result/foreground.png', fileObj_f)
-    filePathName_f = fs.url(filePathName)
-
-    fs = FileSystemStorage()
-    filePathName = fs.save('result/background.png', fileObj_b)
-    filePathName_b = fs.url(filePathName)
 
     final_image = process(
-        foreground='result/foreground.png', background='result/background.png')
+        foreground=fileObj_f, background=fileObj_b)
 
     in_mem_file = BytesIO()
     final_image.save(in_mem_file, format='PNG')
@@ -58,6 +52,4 @@ def predictImage(request):
     output_url = fs.url(outputName)
 
     context['filePathName'] = output_url
-    context['filePathName_f'] = filePathName_f
-    context['filePathName_b'] = filePathName_b
     return render(request, 'deployApp/index.html', context)

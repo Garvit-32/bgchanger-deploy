@@ -1,3 +1,4 @@
+import gc
 import cv2
 import torch
 import numpy as np
@@ -65,6 +66,9 @@ def process(foreground, background):
 
         # array is made by keeping person image pixel where person is present else background image pixels
         result = np.where(seg, ori_image, bg)
+
+        del yy, xx, seg, ori_image, bg
+        gc.collect()
 
         final_image = Image.fromarray(result, "RGB")
 
