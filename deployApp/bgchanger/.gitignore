@@ -1,5 +1,0 @@
-*.pth
-*__pycache__*
-*__init__.py
-.vscode
-tempCodeRunnerFile.py
