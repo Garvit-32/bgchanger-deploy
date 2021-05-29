@@ -1,0 +1,9 @@
+-f https://download.pytorch.org/whl/torch_stable.html
+Django 
+torch==1.8.1+cpu 
+torchvision==0.9.1+cpu
+Pillow
+numpy
+opencv-python-headless
+gunicorn
+python-decouple
