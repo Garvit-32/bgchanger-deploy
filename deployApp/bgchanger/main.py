@@ -4,7 +4,6 @@ import numpy as np
 from PIL import Image
 from .utility import inference
 from .models.hrnet import hrnet
-from torchsummary import summary
 
 
 def process(foreground, background):
