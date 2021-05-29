@@ -35,9 +35,13 @@ def process(foreground, background):
     #model is created
     model = hrnet(2)
     model.load_state_dict(
-        torch.load('deployApp/bgchanger/weights/hrnetv2_hrnet18_person_dataset_120.pth', map_location=torch.device("cpu"))[
+        torch.load('deployApp/bgchanger/weights/hrnetv2_hrnet18_person_dataset_120.pth')[
             "state_dict"]
     )  # model is loaded
+    # model.load_state_dict(
+    #     torch.load('deployApp/bgchanger/weights/hrnetv2_hrnet18_person_dataset_120.pth', map_location=torch.device("cpu"))[
+    #         "state_dict"]
+    # )  # model is loaded
     model.eval()
 
     with torch.no_grad():  # gradients are off

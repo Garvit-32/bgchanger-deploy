@@ -30,7 +30,6 @@ def inference(frame, model):
 
     prediction = (
         torch.argmax(prediction["output"][0], dim=0)
-        .cpu()
         .squeeze(dim=0)
         .numpy()
         .astype(np.uint8)
