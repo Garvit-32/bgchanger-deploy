@@ -20,10 +20,12 @@ def hrnet(n_classes):
             self.encoder = encoder
             self.decoder = decoder
 
-        def forward(self, x, segSize=None):
+        def forward(self, x):
+            batch_size, n_c, w, h = x.size()
+            segSize = (w, h)
             enc_out = self.encoder(x)
-            out = self.decoder(enc_out, segSize)
-            return {"output": out}
+            output = self.decoder(enc_out, segSize)
+            return output
 
     m = init_weights(model(encoder, decoder))
     return m
@@ -323,7 +325,7 @@ class HighResolutionModule(nn.Module):
                     y = y + F.interpolate(
                         self.fuse_layers[i][j](x[j]),
                         size=[height_output, width_output],
-                        mode="bilinear"
+                        mode='bilinear', align_corners=False,
                     )
                 else:
                     y = y + self.fuse_layers[i][j](x[j])
@@ -523,8 +525,11 @@ class HighResolutionNet(nn.Module):
         y_list = self.stage3(x_list)
 
         x0_h, x0_w = y_list[0].size(2), y_list[0].size(3)
-        x1 = F.interpolate(y_list[1], size=(x0_h, x0_w), mode="bilinear")
-        x2 = F.interpolate(y_list[2], size=(x0_h, x0_w), mode="bilinear")
+
+        x1 = F.interpolate(y_list[1], size=(
+            x0_h, x0_w), mode='bilinear', align_corners=False)
+        x2 = F.interpolate(y_list[2], size=(
+            x0_h, x0_w), mode='bilinear', align_corners=False)
         x_stage3 = torch.cat([y_list[0], x1, x2], 1)
 
         x_list = []
@@ -540,9 +545,12 @@ class HighResolutionNet(nn.Module):
 
         # Upsampling
         x0_h, x0_w = x[0].size(2), x[0].size(3)
-        x1 = F.interpolate(x[1], size=(x0_h, x0_w), mode="bilinear")
-        x2 = F.interpolate(x[2], size=(x0_h, x0_w), mode="bilinear")
-        x3 = F.interpolate(x[3], size=(x0_h, x0_w), mode="bilinear")
+        x1 = F.interpolate(x[1], size=(x0_h, x0_w),
+                           mode='bilinear', align_corners=False)
+        x2 = F.interpolate(x[2], size=(x0_h, x0_w),
+                           mode='bilinear', align_corners=False)
+        x3 = F.interpolate(x[3], size=(x0_h, x0_w),
+                           mode='bilinear', align_corners=False)
 
         x = torch.cat([x[0], x1, x2, x3], 1)
 
@@ -603,7 +611,8 @@ class C1_transposed(nn.Module):
         x = self.conv_last(x)
 
         if segSize:
-            x = F.interpolate(x, size=segSize, mode="bilinear")
+            x = F.interpolate(
+                x, size=segSize, mode='bilinear', align_corners=False)
         if self.use_softmax:  # is True during inference
             x = nn.functional.softmax(x, dim=1)
         return x

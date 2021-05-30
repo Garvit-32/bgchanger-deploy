@@ -19,19 +19,36 @@ def preprocess_image(image):
     return torch.unsqueeze(image, dim=0)
 
 
+def to_numpy(tensor):
+    return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
+
+
 def inference(frame, model):
 
     w, h, _ = frame.shape
 
     image = preprocess_image(frame)
 
-    with torch.no_grad():
-        prediction = model(image, (w, h))
+    onnx_input = {'image': to_numpy(image)}
 
-    prediction = (
-        torch.argmax(prediction["output"][0], dim=0)
-        .squeeze(dim=0)
-        .numpy()
-        .astype(np.uint8)
-    )
+    prediction = model.run(None, onnx_input)
+
+    prediction = np.argmax(prediction[0][0], axis=0).astype(np.uint8)
+
+    # print('='*60)
+    # print(np.argmax(prediction[0][0], axis=0).shape)
+    # print('='*60)
+    # with torch.no_grad():
+    #     prediction = model(image)
+
+    # prediction = (
+    #     torch.argmax(prediction[0], dim=0)
+    #     .squeeze(dim=0)
+    #     .numpy()
+    #     .astype(np.uint8)
+    # )
+
+    # 1950, 1300
+    # print(prediction.shape)
+
     return prediction

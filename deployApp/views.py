@@ -10,11 +10,6 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 def remove():
-    if os.path.exists('result/foreground.png'):
-        os.remove("result/foreground.png")
-    if os.path.exists('result/background.png'):
-        os.remove("result/background.png")
-
     if os.path.exists('result/output.png'):
         os.remove("result/output.png")
 

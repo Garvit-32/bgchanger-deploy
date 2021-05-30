@@ -2,3 +2,6 @@
 *__init.py
 .vscode
 templates/deployApp/index1.html
+debug*.py
+*.pth
+deployApp/bgchanger/weights/hrnetv2_hrnet18_person_dataset_120.pth

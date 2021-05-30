@@ -5,6 +5,7 @@ import numpy as np
 from PIL import Image
 from .utility import inference
 from .models.hrnet import hrnet
+import onnxruntime as ort
 
 
 def process(foreground, background):
@@ -32,17 +33,19 @@ def process(foreground, background):
         bg = cv2.resize(bg, (ww, h))
         # bg height is resized to person image height
 
-    #model is created
-    model = hrnet(2)
-    model.load_state_dict(
-        torch.load('deployApp/bgchanger/weights/hrnetv2_hrnet18_person_dataset_120.pth')[
-            "state_dict"]
-    )  # model is loaded
+    model = ort.InferenceSession("deployApp/bgchanger/weights/model_onnx.onnx")
+    # print(model)
+    # model is created
+    # model = hrnet(2)
+    # model.load_state_dict(
+    #     torch.load('deployApp/bgchanger/weights/hrnetv2_hrnet18_person_dataset_120.pth')[
+    #         "state_dict"]
+    # )  # model is loaded
+    # model.eval()
     # model.load_state_dict(
     #     torch.load('deployApp/bgchanger/weights/hrnetv2_hrnet18_person_dataset_120.pth', map_location=torch.device("cpu"))[
     #         "state_dict"]
     # )  # model is loaded
-    model.eval()
 
     with torch.no_grad():  # gradients are off
         # padding of image of person , so that both background image and person image are same
