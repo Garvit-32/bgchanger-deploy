@@ -48,7 +48,4 @@ def inference(frame, model):
     #     .astype(np.uint8)
     # )
 
-    # 1950, 1300
-    # print(prediction.shape)
-
     return prediction
