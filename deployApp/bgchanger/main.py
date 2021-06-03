@@ -4,7 +4,6 @@ import torch
 import numpy as np
 from PIL import Image
 from .utility import inference
-from .models.hrnet import hrnet
 import onnxruntime as ort
 
 
@@ -15,7 +14,8 @@ def process(foreground, background):
     image = person.copy()
 
     bg = Image.open(background)  # reads background image
-    bg = np.array(bg)
+    bg = np.array(bg)[:, :, :3]
+
     h, w, _ = image.shape
     hh, ww, cc = bg.shape
 
